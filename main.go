@@ -43,28 +43,13 @@ func main() {
 			http.Error(w, err.Error(), 400)
 			return
 		}
-
-		// Read body
-		//b, err := ioutil.ReadAll(r.Body)
-		//defer r.Body.Close()
-		//if err != nil {
-		//	http.Error(w, err.Error(), 500)
-		//	return
-		//}
-		//
-		//// Unmarshal
-		//var req loginReq
-		//err = json.Unmarshal(b, &req)
-		//if err != nil {
-		//	http.Error(w, err.Error(), 500)
-		//	return
-		//}
 		if loginReq.Username == "test" && loginReq.Password == "admin" {
-			//cookie := &http.Cookie{
-			//	Name:   "username",
-			//	Value:  "test",
-			//	MaxAge: 300,
-			//}
+			cookie := &http.Cookie{
+				Name:   "name",
+				Value:  "test",
+				MaxAge: 50 * 24 * 60 * 60,
+			}
+			http.SetCookie(w, cookie)
 			w.WriteHeader(200)
 			write, err := w.Write([]byte("oke"))
 			if err != nil {
@@ -78,10 +63,12 @@ func main() {
 	})
 
 	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
+		http.FileServer(http.Dir("./public")).ServeHTTP(writer, request)
 		cookies := request.Cookies()
+
 		for _, cookie := range cookies {
 			if cookie.Name == "name" {
-				http.FileServer(http.Dir("./public")).ServeHTTP(writer, request)
+
 				return
 			}
 		}

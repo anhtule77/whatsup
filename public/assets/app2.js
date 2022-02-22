@@ -4,7 +4,7 @@ var data = {
     roomInput: null,// sử dụng để join các room mới
     rooms: [],// theo dõi các room đã tham gia
     user: { // dành cho user data, như name
-        name: "anhnt650"
+        name: ""
     },
     users: []
 };
@@ -56,7 +56,10 @@ function appendMsg(message) {
 }
 
 (function connectToWebsocket() {
-    data.ws = new WebSocket(data.serverUrl);
+    var name = getCookie("name");
+    console.log(`name=${name}`)
+    data.user.name = name;
+    data.ws = new WebSocket(`${data.serverUrl}?name=${name}`);
     data.ws.addEventListener('open', (event) => {
         console.log("connected to WS!");
         data.ws.send(JSON.stringify({action: 'join-room', message: 'hello', target: {
@@ -73,3 +76,20 @@ function appendMsg(message) {
         console.log('WebSocket error: ', event);
     });
 })();
+
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for(let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) === 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}

@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <link href="assets/logincss.css" type="text/css" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Login</title>
 </head>
 <body>
-<form action="/login" method="post">
+<form>
     <div class="imgcontainer">
         <img src="img_avatar2.png" alt="Avatar" class="avatar">
     </div>
 
     <div class="container">
-        <label for=""><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" name="username" required>
+        <label><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" name="username" required id="username">
 
-        <label for=""><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="password" required>
+        <label><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" name="password" required id="password">
 
-        <button id="btn-login" type="submit">Login</button>
+        <button id="btn-login" type="button">Login</button>
         <label>
             <input type="checkbox" checked="checked" name="remember"> Remember me
         </label>
@@ -31,13 +32,29 @@
 </form>
 
 <script type="text/javascript">
-    document.getElementById("btn-login").addEventListener("onclick", evt => {
-        var un = //doc username
-        var pw = // doc password
+    document.getElementById("btn-login").addEventListener("click", evt => {
+        var un = document.getElementById("username").value;//doc username $("username").val
+        var pw = document.getElementById("password").value;// doc password
         var body = JSON.stringify({username: un, password: pw})
 
         // fetch api / XMLHttpRequest
+        fetch(
+            'http://localhost:8080/login',
+            {
+                method: 'POST',
+                body: body
+            })
+            .then(
+                res => {
+                    console.log(JSON.stringify(res))
+                    if (res.status === 200) {
+                        location.href = "/index.html"
+                    }
+                })
+            .catch(error => console.error('error:', error));
     })
+
+
     // xu ly response neu ok redirect ve trang index
     // nguoc lai dua ra thong bao
 

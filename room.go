@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-const welcomeMessage = "%s đã tham gia phòng"
+/*const welcomeMessage = "%s đã tham gia phòng"*/
 
 type Room struct {
 	ID         string `json:"id"`
@@ -54,7 +54,7 @@ func (room *Room) notifyClientJoin(client *Client) {
 			Id:   room.ID,
 			Name: room.Name,
 		},
-		Message: fmt.Sprintf(welcomeMessage, client.GetName()),
+		Message: fmt.Sprintf(client.GetName()),
 	}
 	room.broadcastToClientsInRoom(message.encode())
 }
